@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class IsidaCotrol : MonoBehaviour
+public class IsidaControl : TurretControlBase
 {
 
     #region 
@@ -118,4 +118,5 @@ public class IsidaCotrol : MonoBehaviour
             }
         }
     }
+    public override float GetRotateSpeed() => rotationSpeed;
 }

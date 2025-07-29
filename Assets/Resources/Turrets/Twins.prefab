@@ -4843,19 +4843,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.624164
+      value: 30.44725
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.49999988
+      value: 0.000003934682
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.0745564
+      value: -47.341095
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.79047585
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4863,7 +4863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6124933
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalRotation.z
@@ -4875,7 +4875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 75.54
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -4884,6 +4884,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_Name
       value: Twins
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932131542085562397, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
+      propertyPath: m_Name
+      value: muzzle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6560128913358595878, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
+      propertyPath: m_Name
+      value: muzzle2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

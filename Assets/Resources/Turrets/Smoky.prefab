@@ -4844,15 +4844,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.6303916
+      value: 24.094429
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4999995
+      value: 0.0000043122163
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.742047
+      value: -43.393013
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4885,6 +4885,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_Name
       value: Smoky
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932131542085562397, guid: d8536823a0365c147b2efafa85320b55, type: 3}
+      propertyPath: m_Name
+      value: muzzle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

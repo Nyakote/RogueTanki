@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class SmokyControl : MonoBehaviour
+public class SmokyControl : TurretControlBase
 {
 
     #region 
@@ -111,4 +111,5 @@ public class SmokyControl : MonoBehaviour
             ps.Emit(1);
         }
     }
+    public override float GetRotateSpeed() => rotation_speed;
 }

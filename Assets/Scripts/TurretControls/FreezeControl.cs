@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class FreezeCotrol : MonoBehaviour
+public class FreezeControl : TurretControlBase
 {
 
     #region 
@@ -114,4 +114,5 @@ public class FreezeCotrol : MonoBehaviour
             }
         }
     }
+    public override float GetRotateSpeed() => rotationSpeed;
 }

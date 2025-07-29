@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class FirebirdCotrol : MonoBehaviour
+public class FirebirdControl : TurretControlBase
 {
 
     #region 
@@ -115,4 +115,11 @@ public class FirebirdCotrol : MonoBehaviour
             }
         }
     }
+    public float Intialize(string mod)
+    {
+        var (turretStats, turretFixed) = firebird.GetFullStats(turretName, mod);
+        float result = turretStats.rotation_speed;
+        return result;
+    }
+    public override float GetRotateSpeed() => rotationSpeed;
 }

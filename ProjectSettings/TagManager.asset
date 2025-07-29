@@ -14,7 +14,7 @@ TagManager:
   - Water
   - UI
   - Enemy
-  - 
+  - Player
   - 
   - 
   - 
@@ -28,7 +28,7 @@ TagManager:
   - 
   - 
   - Ground
-  - 
+  - '!Ground'
   - 
   - 
   - 

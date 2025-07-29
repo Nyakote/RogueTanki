@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.LowLevel;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -15,8 +16,10 @@ public class EnemyCreator : MonoBehaviour
     private string[] availableTurrets = { "Smoky", "Firebird", "Freeze", "Izida", "Railgun", "Ricochet", "Shaft", "Thunder", "Twins" };
     private int hullMod;
     private int turretMod;
+    int hullID;
+    int turretID;
 
-    private Transform layerGround;
+    private NavMeshAgent layerGround;
     private string hull;
     private string turret;
 
@@ -43,8 +46,8 @@ public class EnemyCreator : MonoBehaviour
 
     void TankCreator()
     {
-        int hullID = UnityEngine.Random.Range(0, availableHulls.Length);
-        int turretID = UnityEngine.Random.Range(0, availableTurrets.Length);
+        hullID = UnityEngine.Random.Range(0, availableHulls.Length);
+        turretID = UnityEngine.Random.Range(0, availableTurrets.Length);
 
         hull = availableHulls[hullID];
         turret = availableTurrets[turretID];
@@ -55,10 +58,9 @@ public class EnemyCreator : MonoBehaviour
     {
         GameObject hullPrefab = Resources.Load<GameObject>("Hulls/" + hull);
         GameObject turretPrefab = Resources.Load<GameObject>("Turrets/" + turret);
-        EnemyAI enemyAI = GetComponent<EnemyAI>();
-        enemyAI.Initialize(layerGround, hullMod, turretMod, hull, turret);
+
         if (hullPrefab && turretPrefab)
-        { 
+        {
             GameObject hullInstance = Instantiate(hullPrefab, enemyroot.position, transform.rotation);
             hullInstance.transform.SetParent(enemyroot);
             hullInstance.transform.localPosition = Vector3.zero;
@@ -68,9 +70,7 @@ public class EnemyCreator : MonoBehaviour
 
             if (turretMount != null)
             {
-
                 GameObject turretInstance = Instantiate(turretPrefab);
-
                 Quaternion orinalRot = transform.rotation;
                 transform.rotation = Quaternion.identity;
 
@@ -79,14 +79,13 @@ public class EnemyCreator : MonoBehaviour
                 turretInstance.transform.localRotation = Quaternion.identity;
 
                 Renderer[] allBounds = hullInstance.GetComponentsInChildren<Renderer>(true).Concat(turretInstance.GetComponentsInChildren<Renderer>(true)).ToArray();
-
                 Bounds bounds = new Bounds();
                 bool hasBounds = false;
 
-                foreach(Renderer renderer in allBounds)
+                foreach (Renderer renderer in allBounds)
                 {
                     if (!renderer.enabled || !renderer.gameObject.activeInHierarchy) continue;
-                    if(renderer is ParticleSystemRenderer) continue;
+                    if (renderer is ParticleSystemRenderer) continue;
                     if (renderer.bounds.size == Vector3.zero) continue;
                     if (!hasBounds)
                     {
@@ -98,23 +97,29 @@ public class EnemyCreator : MonoBehaviour
                         bounds.Encapsulate(renderer.bounds);
                     }
                 }
-                if(hasBounds)
+
+                if (hasBounds)
                 {
                     bc.center = enemyroot.InverseTransformPoint(bounds.center);
                     bc.size = bounds.size;
                 }
                 transform.rotation = orinalRot;
             }
-            transform.name = "Enemy" + " " + hull + " "+ turret + " M" + hullMod + " M" + turretMod;
-           
-  
+            float radius = bc.bounds.size.x / 2; 
+            transform.name = "Enemy" + " " + hull + " " + turret + " M" + hullMod + " M" + turretMod;
+            EnemyAI enemyAI = GetComponent<EnemyAI>();
+            if (enemyAI != null)
+                enemyAI.Initialize(hullMod, turretMod, availableHulls[hullID], availableTurrets[turretID], radius);
         }
+       
     }
-    public void Initialize(Transform ground, int hull, int turret)
+    public void Initialize(NavMeshAgent ground, int hull, int turret)
     {
         layerGround = ground;
         hullMod = hull;
-        turretMod = turret; 
+        turretMod = turret;
     }
+
+
 
 }

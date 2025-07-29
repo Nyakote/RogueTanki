@@ -4843,15 +4843,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.856789
+      value: 24.904087
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5000008
+      value: 0.00000018095379
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.017243
+      value: -42.159065
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4884,6 +4884,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
       propertyPath: m_Name
       value: Shaft
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932131542085562397, guid: 26dd1ed26058ca949897788ee7c569b0, type: 3}
+      propertyPath: m_Name
+      value: muzzle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

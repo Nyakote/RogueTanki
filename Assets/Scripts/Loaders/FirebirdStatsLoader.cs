@@ -69,5 +69,5 @@ public class FirebirdStatsLoader : MonoBehaviour
         public List<TurretDefinition> turret;
     }
 
-
+    
 }

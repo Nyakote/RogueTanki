@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class ShaftCotrol : MonoBehaviour
+public class ShaftControl : TurretControlBase
 {
 
     #region 
@@ -150,4 +150,5 @@ public class ShaftCotrol : MonoBehaviour
             }
         }
     }
+    public override float GetRotateSpeed() => rotation_speed;
 }

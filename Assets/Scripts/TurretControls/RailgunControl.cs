@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class RailgunControl : MonoBehaviour
+public class RailgunControl : TurretControlBase
 {
 
     #region 
@@ -109,4 +109,5 @@ public class RailgunControl : MonoBehaviour
             ps.Emit(1);
         }
     }
+    public override float GetRotateSpeed() => rotationSpeed;
 }

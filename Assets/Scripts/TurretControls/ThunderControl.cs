@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-public class ThunderControl : MonoBehaviour
+public class ThunderControl : TurretControlBase
 {
 
     #region 
@@ -114,4 +114,5 @@ public class ThunderControl : MonoBehaviour
             ps.Emit(1);
         }
     }
+    public override float GetRotateSpeed() => rotation_speed;
 }

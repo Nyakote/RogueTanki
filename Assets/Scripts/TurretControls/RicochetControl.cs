@@ -4,7 +4,7 @@ using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UIElements;
 
 
-public class RicochetControl : MonoBehaviour
+public class RicochetControl : TurretControlBase
 {
 
     #region 
@@ -132,4 +132,5 @@ public class RicochetControl : MonoBehaviour
         }
         
     }
+    public override float GetRotateSpeed() => rotationSpeed;
 }

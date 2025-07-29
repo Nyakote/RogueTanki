@@ -4844,15 +4844,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 754.77026
+      value: 33.026237
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00000012781862
+      value: 0.000003942516
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 976.277
+      value: -48.93194
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4885,6 +4885,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
       propertyPath: m_Name
       value: Railgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932131542085562397, guid: a3deff212c58c9348966af3eeaad8307, type: 3}
+      propertyPath: m_Name
+      value: muzzle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

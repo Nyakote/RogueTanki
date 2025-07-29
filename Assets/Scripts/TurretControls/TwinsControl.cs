@@ -4,7 +4,7 @@ using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UIElements;
 
 
-public class TwinsControl : MonoBehaviour
+public class TwinsControl : TurretControlBase
 {
 
     #region 
@@ -141,5 +141,8 @@ public class TwinsControl : MonoBehaviour
             }
         }
 
+
+
     }
+    public override float GetRotateSpeed() => rotation_speed;
 }

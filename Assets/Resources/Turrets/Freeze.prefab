@@ -4843,15 +4843,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.420254
+      value: 30.580776
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.49821842
+      value: 0.0017815776
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 25.481937
+      value: -50.004223
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4884,6 +4884,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
       propertyPath: m_Name
       value: Freeze
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932131542085562397, guid: 7fbc40733a26aef4ea8a83d30442b4df, type: 3}
+      propertyPath: m_Name
+      value: muzzle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
