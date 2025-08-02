@@ -8,7 +8,6 @@ using System;
 public class HullMovement : MonoBehaviour
 {
     [Header("Stats")]
-    [SerializeField] string mod = "M0";
     public float HP;
     public float speed;
     public float turnSpeed;
@@ -31,6 +30,7 @@ public class HullMovement : MonoBehaviour
     private HullStatsLoader hsl;
     private float moveInputZ = 0f;
     private float turnInput = 0f;
+    HealthComponent health;
 
     private void Awake()
     {
@@ -58,10 +58,12 @@ public class HullMovement : MonoBehaviour
 
     void StatsSetter()
     {
+        health = GetComponent<HealthComponent>();
         string name = transform.name.Split(' ')[1];
+        string hullMod = transform.name.Split(' ')[3];
 
-        HullMod hullStats = hsl.GetStats(name, mod);
-        int currentMod = Convert.ToInt32(mod.Substring(1));
+        HullMod hullStats = hsl.GetStats(name, hullMod);
+        int currentMod = Convert.ToInt32(hullMod.Substring(1));
         float speedBuff = 2 + 0.2f * currentMod;
 
         HP = hullStats.HP;
@@ -70,6 +72,8 @@ public class HullMovement : MonoBehaviour
         turnSpeed = hullStats.ROTSPD;
         weight = hullStats.WEIGHT;
         power = hullStats.PWR;
+
+        Invoke(nameof(InitializeHealthWrapper), 0.5f);
     }
     public void HullMoving()
     {
@@ -80,7 +84,10 @@ public class HullMovement : MonoBehaviour
         stoppingFactor = 1f;
         lastMovementInput = moveInputZ;
     }
-
+    void InitializeHealthWrapper()
+    {
+        health.Initialize(HP);
+    }
     public void HullSlowing()
     {
         if (stoppingFactor != speed)

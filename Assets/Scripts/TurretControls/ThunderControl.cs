@@ -51,7 +51,7 @@ public class ThunderControl : TurretControlBase
 
     void Update()
     {
-        if (transform.tag == "Player")
+        if (transform.parent.parent.parent.tag == "Player")
         {
             MoveCrosshair();
             RotateTowardMouse();
@@ -109,10 +109,21 @@ public class ThunderControl : TurretControlBase
     }
     public void OnShoot(InputValue value)
     {
-        if (transform.tag == "Player")
+        if (transform.parent.parent.parent.tag == "Player")
         {
             ps.Emit(1);
         }
     }
+    public override void HandleParticleCollision(GameObject other)
+    {
+        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+
+        HealthComponent health = other.GetComponent<HealthComponent>();
+        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(min_damage, max_damage)));
+
+        Debug.Log("Particle collided with " + other.tag);
+    }
     public override float GetRotateSpeed() => rotation_speed;
+    public override float MinDamage() => min_damage;
+    public override float MaxDamage() => max_damage;
 }

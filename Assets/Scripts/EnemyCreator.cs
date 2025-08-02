@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.LowLevel;
+using System.IO;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyCreator : MonoBehaviour
@@ -22,6 +23,12 @@ public class EnemyCreator : MonoBehaviour
     private NavMeshAgent layerGround;
     private string hull;
     private string turret;
+
+
+    GameObject hullInstance;
+    GameObject turretInstance;
+    string randomSkinName;
+    public Material TankPainter;
 
     void Start()
     {
@@ -61,7 +68,7 @@ public class EnemyCreator : MonoBehaviour
 
         if (hullPrefab && turretPrefab)
         {
-            GameObject hullInstance = Instantiate(hullPrefab, enemyroot.position, transform.rotation);
+            hullInstance = Instantiate(hullPrefab, enemyroot.position, transform.rotation);
             hullInstance.transform.SetParent(enemyroot);
             hullInstance.transform.localPosition = Vector3.zero;
             hullInstance.transform.localRotation = Quaternion.identity;
@@ -70,7 +77,7 @@ public class EnemyCreator : MonoBehaviour
 
             if (turretMount != null)
             {
-                GameObject turretInstance = Instantiate(turretPrefab);
+                turretInstance = Instantiate(turretPrefab);
                 Quaternion orinalRot = transform.rotation;
                 transform.rotation = Quaternion.identity;
 
@@ -105,13 +112,14 @@ public class EnemyCreator : MonoBehaviour
                 }
                 transform.rotation = orinalRot;
             }
-            float radius = bc.bounds.size.x / 2; 
+
             transform.name = "Enemy" + " " + hull + " " + turret + " M" + hullMod + " M" + turretMod;
+            Skin();
             EnemyAI enemyAI = GetComponent<EnemyAI>();
             if (enemyAI != null)
-                enemyAI.Initialize(hullMod, turretMod, availableHulls[hullID], availableTurrets[turretID], radius);
+                enemyAI.Initialize(hullMod, turretMod, availableHulls[hullID], availableTurrets[turretID], bc.bounds.size.x / 2);
         }
-       
+
     }
     public void Initialize(NavMeshAgent ground, int hull, int turret)
     {
@@ -120,6 +128,144 @@ public class EnemyCreator : MonoBehaviour
         turretMod = turret;
     }
 
+        void Skin()
+        {
+            string[] availableSkins = new string[]
+            {
+                    "acid",
+                    "amilia",
+                    "anubis",
+                    "apple",
+                    "arab",
+                    "barkhan",
+                    "besthelper",
+                    "black",
+                    "blink",
+                    "blizzard",
+                    "blueray",
+                    "blue",
+                    "carbon",
+                    "champion",
+                    "clay",
+                    "creator",
+                    "digital",
+                    "dima",
+                    "dirt",
+                    "dragon",
+                    "drug",
+                    "electra",
+                    "euro2012",
+                    "flame",
+                    "flash",
+                    "flora",
+                    "flowers",
+                    "flow",
+                    "foreign",
+                    "forester",
+                    "galaxy",
+                    "garland",
+                    "ginga",
+                    "green",
+                    "halloween2020",
+                    "heartbeat",
+                    "helios",
+                    "holiday",
+                    "inferno",
+                    "irbis",
+                    "izumurud",
+                    "jaguar",
+                    "kedr",
+                    "khokhloma",
+                    "krio",
+                    "lava",
+                    "lead",
+                    "marine",
+                    "marsh",
+                    "mary",
+                    "matrix",
+                    "metallic",
+                    "moderator",
+                    "moonwalker",
+                    "needles",
+                    "nefrit",
+                    "newyear2020",
+                    "newyear2021",
+                    "nightcity",
+                    "nightmare",
+                    "orange",
+                    "outburst",
+                    "phenix",
+                    "plexus",
+                    "prodigy",
+                    "pumpkins",
+                    "punk",
+                    "python",
+                    "radiance",
+                    "redl",
+                    "red",
+                    "reporter",
+                    "rock",
+                    "roger",
+                    "rosequartz",
+                    "rustle",
+                    "rust",
+                    "safari",
+                    "savanna",
+                    "smokescreen",
+                    "space",
+                    "spark",
+                    "spectator",
+                    "spectr",
+                    "spid",
+                    "standstone",
+                    "storm",
+                    "surf",
+                    "taiga",
+                    "tester",
+                    "thunderstorm",
+                    "tina",
+                    "tot",
+                    "triangles",
+                    "tundra",
+                    "urban",
+                    "virus",
+                    "vlastelin",
+                    "white",
+                    "witch",
+                    "with_love",
+                    "zeus"
+            };
+            int randomIndex = UnityEngine.Random.Range(0, availableSkins.Length);
+            randomSkinName = availableSkins[randomIndex];
+            ApplyAppearance();
+        }
 
+    public void ApplyAppearance()
+    {
+        Texture2D camoTex = Resources.Load<Texture2D>($"Paints/Skins/{randomSkinName}_image");
+        Texture2D hullElements = Resources.Load<Texture2D>($"Hulls/Skins/{hull.ToLower()}_m{hullMod}");
+        Texture2D turretElements = Resources.Load<Texture2D>($"Turrets/Skins/{turret.ToLower()}_m{turretMod}");
+
+        Renderer turretSkin = turretInstance.GetComponentInChildren<Renderer>();
+        Renderer hullSkin = hullInstance.GetComponentInChildren<Renderer>();
+
+        Material hullMaterial = new Material(TankPainter);
+        Material turretMaterial = new Material(TankPainter);
+
+        hullMaterial.SetTexture("_Base", hullElements);
+        hullMaterial.SetTexture("_Layer1", camoTex);
+
+        turretMaterial.SetTexture("_Base", turretElements);
+        turretMaterial.SetTexture("_Layer1", camoTex);
+
+
+        turretSkin.material = turretMaterial;
+        hullSkin.material = hullMaterial;
+
+        if (camoTex == null) Debug.LogError($"Camo texture not found: {randomSkinName}");
+        if (hullElements == null) Debug.LogError($"Hull skin not found: {hull.ToLower()}_m{hullMod}");
+        if (turretElements == null) Debug.LogError($"Turret skin not found: {turret.ToLower()}_m{turretMod}");
+
+    }
 
 }

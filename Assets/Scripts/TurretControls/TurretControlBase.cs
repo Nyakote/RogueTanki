@@ -60,5 +60,8 @@ public abstract class TurretControlBase : MonoBehaviour
         }
     }
     public abstract float GetRotateSpeed();
+    public abstract float MinDamage();
+    public abstract float MaxDamage();
+    public abstract void HandleParticleCollision(GameObject other);
 
 }

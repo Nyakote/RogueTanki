@@ -7,7 +7,7 @@ using System.Globalization;
 public class MapLoader : MonoBehaviour
 {
     public string xmlFileName = "Silence"; // without .xml
-    private string propsFolder = "MapElements/Props";  
+    private string propsFolder = "Mesh";  
 
     void Start()
     {
@@ -29,7 +29,7 @@ public class MapLoader : MonoBehaviour
         XmlNodeList propNodes = xmlDoc.GetElementsByTagName("prop");
         foreach (XmlNode prop in propNodes)
         {
-            string propName = prop.Attributes["name"].Value;
+            string propName = prop.Attributes["name"].Value; 
             XmlNode pos = prop["position"];
             XmlNode rot = prop["rotation"];
 
@@ -42,11 +42,11 @@ public class MapLoader : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(0f, -float.Parse(rot["z"].InnerText, CultureInfo.InvariantCulture) * Mathf.Rad2Deg, 0f);
 
 
-            GameObject prefab = Resources.Load<GameObject>($"{propsFolder}/{propName}");
+            GameObject prefab = Resources.Load<GameObject>($"{propsFolder}/{propName.ToLower()}");
             if (prefab != null)
                 Instantiate(prefab, position, rotation);
             else
-                Debug.LogWarning($"Prefab not found: {propName}");
+                Debug.LogWarning($"Prefab not found: {propName.ToLower()}");
         }
 
         Debug.Log("Map loaded.");

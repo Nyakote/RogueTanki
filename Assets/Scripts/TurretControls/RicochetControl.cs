@@ -1,7 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UIElements;
+using static UnityEngine.ParticleSystem;
 
 
 public class RicochetControl : TurretControlBase
@@ -40,6 +43,9 @@ public class RicochetControl : TurretControlBase
     private ParticleSystem ps;
     private RicochetStatsLoader ricochet;
     private bool isHolding = false;
+    private ParticleSystem.Particle[] particles;
+    private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
+    private ParticleSystem.MainModule mainModule;
     #endregion
 
     void Start()
@@ -47,18 +53,32 @@ public class RicochetControl : TurretControlBase
         ricochet = GetComponent<RicochetStatsLoader>();
         crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
         ps = GetComponentInChildren<ParticleSystem>();
+        mainModule = ps.main;
+        particles = new ParticleSystem.Particle[ps.main.maxParticles];
+        var collision = ps.collision;
+        collision.enabled = true;
+
+        collision.collidesWith = LayerMask.GetMask("Player", "Enemy" , "Map");
+
+        collision.collidesWith = LayerMask.GetMask();
+
         Invoke("StatsSetter", 0.2f);
+
     }
 
     void Update()
     {
-        if (transform.tag == "Player")
+        if (transform.parent.parent.parent.tag == "Player")
         {
-            MoveCrosshair();
-            RotateTowardMouse();
+           MoveCrosshair();
+           RotateTowardMouse();
         }
         if (isHolding && Time.time - timepassed >= timeBetweenShots)
         {
+            var collision = ps.collision;
+            collision.collidesWith = LayerMask.GetMask();
+
+            StartCoroutine(EnableCollisionAfterDelay(0.025f));
             timepassed = Time.time;
             ps.Emit(1);
         }
@@ -118,9 +138,11 @@ public class RicochetControl : TurretControlBase
         rotationSpeed = rotationSpeed / 10f;
     }
     public void OnShoot(InputValue value)
-    {
-        if (transform.tag == "Player")
+    { 
+
+        if (transform.parent.parent.parent.tag == "Player")
         {
+          
             if (value.isPressed)
             {
                 isHolding = true;
@@ -132,5 +154,55 @@ public class RicochetControl : TurretControlBase
         }
         
     }
+
+    public override void HandleParticleCollision(GameObject other)
+    {
+        if (!other.CompareTag("Player") && !other.CompareTag("Enemy"))
+            return;
+        HealthComponent health = other.GetComponent<HealthComponent>();
+        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(minDamage, maxDamage)));
+        Debug.Log("Particle collided with " + other.tag);
+
+        int numCollisionEvents = ps.GetCollisionEvents(other, collisionEvents);
+        int numParticlesAlive = ps.GetParticles(particles);
+
+        for (int i = 0; i < numCollisionEvents; i++)
+        {
+            Vector3 collisionPoint = collisionEvents[i].intersection;
+
+            int closestIndex = -1;
+            float closestDist = float.MaxValue;
+
+            for (int j = 0; j < numParticlesAlive; j++)
+            {
+                float dist = Vector3.Distance(particles[j].position, collisionPoint);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestIndex = j;
+                }
+            }
+
+            if (closestIndex >= 0 && closestDist < 0.5f)
+            {
+                particles[closestIndex].remainingLifetime = -1f;
+            }
+        }
+
+        ps.SetParticles(particles, numParticlesAlive);
+    }
+    IEnumerator EnableCollisionAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        var collision = ps.collision;
+        collision.collidesWith = LayerMask.GetMask("Player", "Enemy" , "Map");
+    }
+
+
+
+
     public override float GetRotateSpeed() => rotationSpeed;
+    public override float MinDamage() => minDamage;
+    public override float MaxDamage() => maxDamage;
 }

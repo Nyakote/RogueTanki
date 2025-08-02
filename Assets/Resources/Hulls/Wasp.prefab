@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.74712
+      value: 84.6221
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.3376875
+      value: -0.0000009536743
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.140458
+      value: -36.664417
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5485020824221665846, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0113868d74475554a8533cbe9aef16dd, type: 2}
     - target: {fileID: 919132149155446097, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_Name
       value: Wasp

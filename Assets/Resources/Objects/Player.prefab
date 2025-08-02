@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5877080083431445683}
+  - component: {fileID: 5602028590453915991}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,6 +36,28 @@ Transform:
   - {fileID: 7516180372382340687}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &5602028590453915991
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54349543579013992}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &415658408917417595
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,8 +86,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 415658408917417595}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3536109, y: -0.3222952, z: 0.13126087, w: 0.8682487}
-  m_LocalPosition: {x: 36.183075, y: 16.57296, z: -10.778427}
+  m_LocalRotation: {x: 0.37718704, y: 0.000000009820146, z: -0.000000003999442, w: 0.9261371}
+  m_LocalPosition: {x: 9.989998, y: 30.420002, z: -5.7199974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -307,8 +330,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924310950315775043}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.35361087, y: -0.32229516, z: 0.13126086, w: 0.8682487}
-  m_LocalPosition: {x: 36.183075, y: 16.57296, z: -10.778427}
+  m_LocalRotation: {x: 0.37718704, y: 0.0000000057516174, z: 0.000000005990336, w: 0.9261371}
+  m_LocalPosition: {x: 9.989998, y: 30.420002, z: -5.7199974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -522,7 +545,8 @@ GameObject:
   - component: {fileID: 128913770242674458}
   - component: {fileID: 4286615045385017492}
   - component: {fileID: 6048404178922764981}
-  m_Layer: 0
+  - component: {fileID: 401352170827287510}
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -538,7 +562,7 @@ Transform:
   m_GameObject: {fileID: 2993165237332864422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.06104851, z: 0, w: 0.99813485}
-  m_LocalPosition: {x: 16.738718, y: -12.52704, z: 11.803799}
+  m_LocalPosition: {x: 9.99, y: 1.32, z: 24.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -557,6 +581,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRoot: {fileID: 7516180372382340687}
+  hullName: 
+  turretName: 
+  hullMod: 
+  turretMod: 
+  paint: 
+  TankPainter: {fileID: -876546973899608171, guid: 5dcacfe4c394322499745356b62af9b2, type: 3}
 --- !u!65 &8650904092126589071
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -667,3 +697,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HullStats:
     hull: []
+--- !u!114 &401352170827287510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2993165237332864422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a169eabc529dc564e9e4f86bca8cf98c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 0

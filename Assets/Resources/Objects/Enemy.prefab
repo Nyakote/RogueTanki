@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 6874819333250797879}
   - component: {fileID: 401095310262151018}
   - component: {fileID: 6677442776934618904}
-  - component: {fileID: 2194340635402670913}
   - component: {fileID: -8225203074625780085}
   - component: {fileID: -3571677594364414526}
-  m_Layer: 0
+  - component: {fileID: 1602846156861243590}
+  - component: {fileID: 4371387468258866689}
+  m_Layer: 6
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyroot: {fileID: 3052981065336011166}
+  TankPainter: {fileID: -876546973899608171, guid: 5dcacfe4c394322499745356b62af9b2, type: 3}
 --- !u!65 &401095310262151018
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -96,43 +98,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2194340635402670913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1623860973429648669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63ade0716fef52949a7597b226cc1e8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hullMod: M0
-  hullName: 
-  HP: 0
-  speed: 0
-  turnSpeed: 0
-  weight: 0
-  power: 0
-  turretMod: M0
-  turretName: 
-  cost: 0
-  minDamage: 0
-  maxDamage: 0
-  impactForce: 0
-  recoil: 0
-  reloadTime: 0
-  rotationSpeed: 0
-  criticalChance: 0
-  criticalDamage: 0
-  minDamageRange: 0
-  maxDamageRange: 0
-  attackRange: 10
-  sightRange: 20
-  turretBase: {fileID: 2949278112204053979, guid: 009aaecfcb8ded94ab45b1458d5fe851, type: 3}
 --- !u!114 &-8225203074625780085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,3 +136,39 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1602846156861243590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623860973429648669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b41460dc65bb249a21e0e19560bad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hullMaxSpeed: 0
+  hullPower: 0
+  hullWeight: 0
+  hullRotationSpeed: 0
+  tankHealsPoints: 0
+  currentHealth: 0
+  turretRotationSpeed: 0
+  sightRange: 50
+  attackRange: 30
+  closeRange: 20
+--- !u!114 &4371387468258866689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623860973429648669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a169eabc529dc564e9e4f86bca8cf98c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 0

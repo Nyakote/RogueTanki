@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 210212874439457272}
   - component: {fileID: 3342290994762357243}
   - component: {fileID: 4821483280047807075}
+  - component: {fileID: 6181629820249843888}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -116,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -169,7 +170,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 26.56
+      scalar: 60
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -3621,7 +3622,7 @@ ParticleSystem:
   CollisionModule:
     enabled: 1
     serializedVersion: 4
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -3792,11 +3793,11 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 4194496
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -4833,6 +4834,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6181629820249843888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387024117827228157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaea137e39f91041a011d3438ab187b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretControl: {fileID: 7931476713772186571}
 --- !u!1001 &2412847029209038196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4843,15 +4857,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.901138
+      value: 80.716
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0011725515
+      value: 0.0011668295
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -36.614403
+      value: 8.359013
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
       propertyPath: m_LocalRotation.w

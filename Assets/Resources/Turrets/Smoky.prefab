@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1018630250687609313}
   - component: {fileID: 5749657827678443098}
   - component: {fileID: 6294973681887410829}
+  - component: {fileID: 695489963339254220}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -3619,9 +3620,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -3684,7 +3685,7 @@ ParticleSystem:
     m_Bounce:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3796,7 +3797,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -4834,6 +4835,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &695489963339254220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672737280540589633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaea137e39f91041a011d3438ab187b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8124994121986882506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4844,7 +4857,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.094429
+      value: 68.01815
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4852,7 +4865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -43.393013
+      value: 22.304243
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4903,6 +4916,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8536823a0365c147b2efafa85320b55, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5427238325222684102}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d8536823a0365c147b2efafa85320b55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4256480430490911322}
   m_SourcePrefab: {fileID: 100100000, guid: d8536823a0365c147b2efafa85320b55, type: 3}
 --- !u!4 &8596103292022905889 stripped
 Transform:
@@ -4954,3 +4970,33 @@ MonoBehaviour:
   weak_damage_percent: 0
   auto_aim_up: 0
   auto_aim_down: 0
+--- !u!114 &4256480430490911322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8935333847590438555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 911163e3a7c6af645ac28fe810ab1175, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}

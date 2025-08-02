@@ -48,7 +48,7 @@ public class IsidaControl : TurretControlBase
 
     void Update()
     {
-        if (transform.tag == "Player")
+        if (transform.parent.parent.parent.tag == "Player")
         {
             MoveCrosshair();
             RotateTowardMouse();
@@ -105,7 +105,7 @@ public class IsidaControl : TurretControlBase
     }
     public void OnShoot(InputValue value)
     {
-        if (transform.tag == "Player")
+        if (transform.parent.parent.parent.tag == "Player")
         {
             var emmit = ps.emission;
             if (value.isPressed)
@@ -118,5 +118,16 @@ public class IsidaControl : TurretControlBase
             }
         }
     }
+    public override void HandleParticleCollision(GameObject other)
+    {
+        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+
+        HealthComponent health = other.GetComponent<HealthComponent>();
+        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage, damage)));
+
+        Debug.Log("Particle collided with " + other.tag);
+    }
     public override float GetRotateSpeed() => rotationSpeed;
+    public override float MinDamage() => damage;
+    public override float MaxDamage() => damage;
 }

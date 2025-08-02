@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8012878156674137336}
   - component: {fileID: 1347695225759706140}
   - component: {fileID: 2923842335700074826}
+  - component: {fileID: 6564165892484367052}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -4833,6 +4834,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6564165892484367052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425260576441214911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaea137e39f91041a011d3438ab187b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretControl: {fileID: 0}
 --- !u!1001 &653369922070402412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4843,7 +4857,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 32.04864
+      value: 69.32061
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4851,7 +4865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.865227
+      value: 14.108021
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4883,7 +4897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_Name
-      value: Izida
+      value: Isida
       objectReference: {fileID: 0}
     - target: {fileID: 3932131542085562397, guid: fe2db26b2a6bd944ea898f2606ac422f, type: 3}
       propertyPath: m_Name

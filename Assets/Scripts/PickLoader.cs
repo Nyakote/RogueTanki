@@ -1,27 +1,44 @@
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PickLoader : MonoBehaviour
 {
     [SerializeField] private Transform playerRoot;
     BoxCollider playerCollider;
+    HealthComponent healthComponent;
+    public string hullName;
+    public string turretName;
+    public string hullMod;
+    public string turretMod;
+    public string paint;
+    public Material TankPainter;
+    
+    GameObject hullInstance;
+    GameObject turretInstance;
 
     void Start()
     {
+        healthComponent = GetComponent<HealthComponent>();
         playerCollider = playerRoot.GetComponent<BoxCollider>();
 
-        string hullName = PlayerPrefs.GetString("SelectedHull", "Wasp");
-        string turretName = PlayerPrefs.GetString("SelectedTurret", "Smoky");   
+        hullName = PlayerPrefs.GetString("SelectedHull", "Wasp");
+        turretName = PlayerPrefs.GetString("SelectedTurret", "Smoky");
+        hullMod = PlayerPrefs.GetString("SelectedHullMod", "M0");
+        turretMod = PlayerPrefs.GetString("SelectedTurretMod", "M0");
+        paint = PlayerPrefs.GetString("SelectedPaint", "green");
+
 
         GameObject hullPrefab = Resources.Load<GameObject>("Hulls/" + hullName);
         GameObject turretPrefab = Resources.Load<GameObject>("Turrets/" + turretName);
-
+        transform.name = transform.name + " " + hullName + " " + turretName + " " + hullMod + " " + turretMod;
         if (hullPrefab && turretPrefab)
         {
             Quaternion originalRotation = playerRoot.rotation;
             playerRoot.rotation = Quaternion.identity;
 
-            GameObject hullInstance = Instantiate(hullPrefab, playerRoot.position, playerRoot.rotation);
+            hullInstance = Instantiate(hullPrefab, playerRoot.position, playerRoot.rotation);
             hullInstance.transform.SetParent(playerRoot);
             hullInstance.transform.localPosition = Vector3.zero;
             hullInstance.transform.localRotation = Quaternion.identity;
@@ -30,13 +47,12 @@ public class PickLoader : MonoBehaviour
 
             if (turretMount != null)
             {
-                GameObject turretInstance = Instantiate(turretPrefab);
+                turretInstance = Instantiate(turretPrefab);
 
 
                 turretInstance.transform.SetParent(turretMount);
                 turretInstance.transform.localPosition = Vector3.zero;
                 turretInstance.transform.localRotation = Quaternion.identity;
-
                 Renderer[] allRenderers = hullInstance.GetComponentsInChildren<Renderer>(true).Concat(turretInstance.GetComponentsInChildren<Renderer>(true)).ToArray();
 
                 Bounds totalBounds = new Bounds();
@@ -66,12 +82,34 @@ public class PickLoader : MonoBehaviour
 
                 playerRoot.rotation = originalRotation;
             }
-            transform.name = transform.name + " " + hullName + " " + turretName + " M0" + " M0";
+           
             foreach (Transform t in playerRoot.GetComponentsInChildren<Transform>())
             {
                 t.gameObject.tag = "Player";
             }
         }
+
+        Texture2D camoTex = Resources.Load<Texture2D>($"Paints/Skins/{paint}_image");
+        Texture2D hullElements = Resources.Load<Texture2D>($"Hulls/Skins/{hullName.ToLower()}_{hullMod.ToLower()}");
+        Texture2D turretElements = Resources.Load<Texture2D>($"Turrets/Skins/{turretName.ToLower()}_{turretMod.ToLower()}");
+
+        Renderer turretSkin = turretInstance.GetComponentInChildren<Renderer>();
+        Renderer hullSkin = hullInstance.GetComponentInChildren<Renderer>();
+
+        Material hullMaterial = new Material(TankPainter);
+        Material turretMaterial = new Material(TankPainter);
+
+        hullMaterial.SetTexture("_Base", hullElements);
+        hullMaterial.SetTexture("_Layer1", camoTex);
+
+        turretMaterial.SetTexture("_Base", turretElements);
+        turretMaterial.SetTexture("_Layer1", camoTex);
+
+
+        turretSkin.material = turretMaterial;
+        hullSkin.material = hullMaterial;
+
+
 
     }
 }

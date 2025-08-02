@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2160442884565576409}
   - component: {fileID: 7865887239461581055}
   - component: {fileID: 1848056943146645488}
+  - component: {fileID: 8583984618523501297}
   m_Layer: 0
   m_Name: Particle System 01
   m_TagString: Untagged
@@ -106,7 +107,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -3619,9 +3620,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -3796,7 +3797,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -4833,6 +4834,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8583984618523501297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774757303934933732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aaea137e39f91041a011d3438ab187b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4756059149242227886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4843,15 +4856,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 30.44725
+      value: -16.32829
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.000003934682
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -47.341095
+      value: 4.4114666
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4906,6 +4919,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6872595422763055460}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1819245962953132683}
   m_SourcePrefab: {fileID: 100100000, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
 --- !u!4 &76452624676734222 stripped
 Transform:
@@ -4969,6 +4985,36 @@ MonoBehaviour:
   timepassed: 0
   RightC: {fileID: 76452624676734222}
   LeftC: {fileID: 8009058587158139325}
+--- !u!114 &-1819245962953132683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5674961355511783935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 911163e3a7c6af645ac28fe810ab1175, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!4 &8009058587158139325 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3253022528231050515, guid: d9b666749b5bbc948aa5122d8088c0af, type: 3}
