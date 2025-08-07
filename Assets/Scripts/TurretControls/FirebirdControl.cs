@@ -1,13 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-
+using System.Collections.Generic;
 
 public class FirebirdControl : TurretControlBase
 {
-
-    #region 
-
     [Header("Basic Turret Stats")]
     private string turretName = "Firebird";
     private string turretMod;
@@ -25,63 +21,72 @@ public class FirebirdControl : TurretControlBase
     public int energy_consumption;
     public int weak_damage_percent;
     public float cone_angle;
+    public ParticleSystem fireParticles;
 
-    [Header("Visuals")]
-    
+    public float currentEnergy;
+    private float startReloadTime;
+    private float timeBetweedReloads = 0.5f;
+    private bool isShooting = false;
+    private bool isStartTimeSet = false;
+
+
 
     [Header("References")]
-    private RectTransform crosshair;
     private ParticleSystem ps;
     private FirebirdStatsLoader firebird;
+    CanvasUI cu;
+    public string enemyTag;
 
-    #endregion
+    private List<ParticleCollisionEvent> collisionEvents;
 
     void Start()
     {
-        firebird = GetComponent<FirebirdStatsLoader>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
-        ps = GetComponentInChildren<ParticleSystem>();
+
         Invoke("StatsSetter", 0.2f);
     }
 
-    void Update()
+    private void Update()
     {
-        if (transform.parent.parent.parent.tag == "Player")
+        if (!transform.parent.parent.parent.CompareTag("Player"))
+            return;
+
+        if (!isShooting && Time.time - startReloadTime >= timeBetweedReloads)
         {
-            MoveCrosshair();
-            RotateTowardMouse();
+            currentEnergy += (energy_capacity / reload_time) * Time.deltaTime;
+            currentEnergy = Mathf.Clamp(currentEnergy, 0f, energy_capacity);
         }
-    }
 
-    void MoveCrosshair()
-    {
-        crosshair.position = Input.mousePosition;
-    }
-
-    void RotateTowardMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
+        if (isShooting)
         {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = targetPoint - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
+            currentEnergy -= energy_consumption * Time.deltaTime;
+            if (currentEnergy < energy_consumption*Time.deltaTime)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation,rotationSpeed * Time.deltaTime);
-
+                StopShooting();
             }
         }
+        cu = GetComponentInChildren<CanvasUI>();
+        if (cu != null)
+        {
+            cu.CRInitialize(currentEnergy);
+        }
     }
-  
+
+    private void StopShooting()
+    {
+        isShooting = false;
+        startReloadTime = Time.time;
+        var em = ps.emission;
+        em.enabled = false;
+    }
     private void StatsSetter()
     {
+        firebird = GetComponent<FirebirdStatsLoader>();
+        ps = GetComponentInChildren<ParticleSystem>();
+        collisionEvents = new List<ParticleCollisionEvent>();
+        
+
         turretMod = transform.parent.parent.parent.name.Split(' ')[4];
-        var(turretStats, turretFixed) = firebird.GetFullStats(turretName, turretMod);
+        var (turretStats, turretFixed) = firebird.GetFullStats(turretName, turretMod);
         price = turretStats.price;
         damage = turretStats.damage;
         rotationSpeed = turretStats.rotation_speed;
@@ -95,42 +100,80 @@ public class FirebirdControl : TurretControlBase
         energy_consumption = turretFixed.energy_consumption;
         weak_damage_percent = turretFixed.weak_damage_percent;
         cone_angle = turretFixed.cone_angle;
+        currentEnergy = energy_capacity;
 
         var shape = ps.shape;
         shape.angle = cone_angle;
-        rotationSpeed = rotationSpeed / 10f;
+        rotationSpeed /= 10f;
+
+        Transform root = transform.parent.parent.parent;
+        enemyTag = root.CompareTag("Enemy") ? "Player" : "Enemy";
+
+
     }
+
     public void OnShoot(InputValue value)
     {
         if (transform.parent.parent.parent.tag == "Player")
         {
-            var emmit = ps.emission;
-            if (value.isPressed)
+            if (value.isPressed && currentEnergy > energy_consumption*Time.deltaTime)
             {
-                emmit.enabled = true;
+                var collision = ps.collision;
+                collision.collidesWith = LayerMask.GetMask("Enemy", "Map");
+                isShooting = true;
+                var em = ps.emission;
+                em.enabled = true;
             }
             else
             {
-                emmit.enabled = false;
+                StopShooting();
             }
         }
     }
-    public float Intialize(string mod)
-    {
-        var (turretStats, turretFixed) = firebird.GetFullStats(turretName, mod);
-        float result = turretStats.rotation_speed;
-        return result;
-    }
+
+
     public override void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
 
-        HealthComponent health = other.GetComponent<HealthComponent>();
-        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage, damage)));
+        int eventCount = fireParticles.GetCollisionEvents(other, collisionEvents);
 
-        Debug.Log("Particle collided with " + other.tag);
+        for (int i = 0; i < eventCount; i++)
+        {
+            if (other.CompareTag(enemyTag))
+            {
+                HealthComponent health = other.GetComponent<HealthComponent>();
+                if (health != null)
+                {
+                    health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage*Time.deltaTime, damage * Time.deltaTime)));
+                }
+            }
+
+            RemoveParticleAt(collisionEvents[i].intersection);
+        }
     }
+
+    private void RemoveParticleAt(Vector3 hitPosition)
+    {
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[fireParticles.main.maxParticles];
+        int count = fireParticles.GetParticles(particles);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 particleWorldPos = fireParticles.transform.TransformPoint(particles[i].position);
+            if (Vector3.Distance(particleWorldPos, hitPosition) < 0.1f)
+            {
+                particles[i].remainingLifetime = 0f; 
+            }
+        }
+
+        fireParticles.SetParticles(particles, count);
+    }
+
     public override float GetRotateSpeed() => rotationSpeed;
-    public override float MinDamage() => damage;
-    public override float MaxDamage() => damage;
+    public override float MinDamage() => damage * Time.deltaTime;
+    public override float MaxDamage() => damage * Time.deltaTime;
+    public override float EnergyConsumption() => energy_consumption;
+    public override float EnergyCapacity() => energy_capacity;
+    public override float ReloadTime() => reload_time;
+    public override float TimeBetweenShots() => 0f;
 }

@@ -32,53 +32,23 @@ public class IsidaControl : TurretControlBase
 
 
     [Header("References")]
-    private RectTransform crosshair;
     private ParticleSystem ps;
     private IsidaStatsLoader isida;
 
     #endregion
+    public string enemyTag;
+
+
 
     void Start()
     {
         isida = GetComponent<IsidaStatsLoader>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
+  
         ps = GetComponentInChildren<ParticleSystem>();
         Invoke("StatsSetter", 0.2f);
+   
     }
 
-    void Update()
-    {
-        if (transform.parent.parent.parent.tag == "Player")
-        {
-            MoveCrosshair();
-            RotateTowardMouse();
-        }
-    }
-
-    void MoveCrosshair()
-    {
-        crosshair.position = Input.mousePosition;
-    }
-
-    void RotateTowardMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
-        {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = targetPoint - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-            }
-        }
-    }
 
     private void StatsSetter()
     {
@@ -102,11 +72,19 @@ public class IsidaControl : TurretControlBase
         var shape = ps.shape;
         shape.angle = cone_angle;
         rotationSpeed = rotationSpeed / 10f;
+
+        Transform root = transform.parent.parent.parent;
+        enemyTag = root.CompareTag("Enemy") ? ("Player") : ("Enemy");
     }
+
     public void OnShoot(InputValue value)
     {
         if (transform.parent.parent.parent.tag == "Player")
         {
+            ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
+            var collision = GetComponent<ParticleSystem>().collision;
+            collision.collidesWith = LayerMask.GetMask("Enemy", "Map");
+
             var emmit = ps.emission;
             if (value.isPressed)
             {
@@ -120,14 +98,19 @@ public class IsidaControl : TurretControlBase
     }
     public override void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+        if (!other.CompareTag(enemyTag)) return;
+
 
         HealthComponent health = other.GetComponent<HealthComponent>();
-        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage, damage)));
+        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage * Time.deltaTime, damage * Time.deltaTime)));
 
         Debug.Log("Particle collided with " + other.tag);
     }
     public override float GetRotateSpeed() => rotationSpeed;
-    public override float MinDamage() => damage;
-    public override float MaxDamage() => damage;
+    public override float MinDamage() => damage * Time.deltaTime;
+    public override float MaxDamage() => damage * Time.deltaTime;
+    public override float EnergyConsumption() => attack_energy_consumption;
+    public override float EnergyCapacity() => energy_capacity;
+    public override float ReloadTime() => reload_time;
+    public override float TimeBetweenShots() => 0f;
 }

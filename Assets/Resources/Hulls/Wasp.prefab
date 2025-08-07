@@ -51,7 +51,7 @@ PrefabInstance:
     - target: {fileID: -5485020824221665846, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0113868d74475554a8533cbe9aef16dd, type: 2}
+      objectReference: {fileID: 2100000, guid: 0a673709332400b40a5d378cc49684ea, type: 2}
     - target: {fileID: 919132149155446097, guid: e0fa3d7a726a30548af3e3b548a47b69, type: 3}
       propertyPath: m_Name
       value: Wasp

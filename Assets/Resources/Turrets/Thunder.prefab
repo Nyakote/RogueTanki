@@ -4895,6 +4895,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8202957551915430242, guid: 47fac744592c4794d983b7759a41e925, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a4222b1b01d8e4a489936b9f1842cb8d, type: 2}
+    - target: {fileID: -1433416284855106355, guid: 47fac744592c4794d983b7759a41e925, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a4222b1b01d8e4a489936b9f1842cb8d, type: 2}
     - target: {fileID: 919132149155446097, guid: 47fac744592c4794d983b7759a41e925, type: 3}
       propertyPath: m_Name
       value: Thunder
@@ -5000,6 +5008,6 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: New action map
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

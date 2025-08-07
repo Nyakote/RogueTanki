@@ -35,78 +35,76 @@ public class RicochetControl : TurretControlBase
     public float reload_time;
     public int auto_aim_up;
     public int auto_aim_down;
+
     public float timeBetweenShots = 0.2f;
     public float timepassed = 0f;
 
+    private float currentEnergy;
+    private float startReloadTime;
+    private float timeBetweenReloads = 0.5f;
+    private bool reloadTimeIsSet = false;
+    private bool isShooting = false;
+    private bool isInitialized = false;
+
     [Header("References")]
-    private RectTransform crosshair;
     private ParticleSystem ps;
     private RicochetStatsLoader ricochet;
     private bool isHolding = false;
     private ParticleSystem.Particle[] particles;
     private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
     private ParticleSystem.MainModule mainModule;
+    CanvasUI cu;
     #endregion
 
+
+    public string enemyTag;
     void Start()
     {
         ricochet = GetComponent<RicochetStatsLoader>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
         ps = GetComponentInChildren<ParticleSystem>();
-        mainModule = ps.main;
+
         particles = new ParticleSystem.Particle[ps.main.maxParticles];
-        var collision = ps.collision;
-        collision.enabled = true;
-
-        collision.collidesWith = LayerMask.GetMask("Player", "Enemy" , "Map");
-
-        collision.collidesWith = LayerMask.GetMask();
-
         Invoke("StatsSetter", 0.2f);
 
     }
 
-    void Update()
-    {
-        if (transform.parent.parent.parent.tag == "Player")
-        {
-           MoveCrosshair();
-           RotateTowardMouse();
-        }
-        if (isHolding && Time.time - timepassed >= timeBetweenShots)
-        {
-            var collision = ps.collision;
-            collision.collidesWith = LayerMask.GetMask();
 
-            StartCoroutine(EnableCollisionAfterDelay(0.025f));
+    private void Update()
+    {
+        if(!isInitialized) return;
+        if (!transform.parent.parent.parent.CompareTag("Player"))
+            return;
+
+        if (!isShooting && Time.time - startReloadTime >= timeBetweenReloads)
+        {
+            currentEnergy += (energy_capacity / energy_recharge) * Time.deltaTime;
+            currentEnergy = Mathf.Clamp(currentEnergy, 0f, energy_capacity);
+        }
+
+        if (isShooting && Time.time - timepassed >= timeBetweenShots)
+        {
             timepassed = Time.time;
+            reloadTimeIsSet = false;
             ps.Emit(1);
-        }
-    }
-
-    void MoveCrosshair()
-    {
-        crosshair.position = Input.mousePosition;
-    }
-
-    void RotateTowardMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
-        {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = targetPoint - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
+            currentEnergy -= energy_per_shot;
+            if (currentEnergy < energy_per_shot)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
+                StopShooting();
             }
         }
+        cu = GetComponentInChildren<CanvasUI>();
+        if (cu != null)
+        {
+            cu.CRInitialize(currentEnergy);
+        }
+    }
+
+    private void StopShooting()
+    {
+        isShooting = false;
+        startReloadTime = Time.time;
+        var em = ps.emission;
+        em.enabled = false;
     }
 
     private void StatsSetter()
@@ -125,40 +123,54 @@ public class RicochetControl : TurretControlBase
         rotationSpeed = turretStats.rotation_speed;
         rotationAcceleration = turretStats.rotation_acceleration;
         energy_capacity = turretFixed.energy_capacity;
-        energy_recharge = turretFixed.energy_recharge;
+        energy_recharge = turretFixed.energy_recharge/10;
         weak_damage_percent = turretFixed.weak_damage_percent;
         projectile_radius = turretFixed.projectile_radius;
         reload_time = turretStats.reload_time;
         auto_aim_up = turretFixed.auto_aim_up;
         auto_aim_down = turretFixed.auto_aim_down;
 
-
+        currentEnergy = energy_capacity;
         var pjspeed = ps.main.startSpeed;
         pjspeed = projectile_speed;    
         rotationSpeed = rotationSpeed / 10f;
+        Transform root = transform.parent.parent.parent;
+        enemyTag = root.CompareTag("Enemy") ? ("Player") : ("Enemy");
+        isInitialized = true;
     }
-    public void OnShoot(InputValue value)
-    { 
 
-        if (transform.parent.parent.parent.tag == "Player")
+
+    public void OnShoot(InputValue value)
+    {
+        if (transform.parent.parent.parent.CompareTag("Player"))
         {
-          
-            if (value.isPressed)
+            if (currentEnergy >= energy_per_shot)
             {
-                isHolding = true;
+                isHolding = value.isPressed;
+
+                if (ps == null)
+                {
+                    Debug.LogError("ParticleSystem 'ps' is null in OnShoot!");
+                    return;
+                }
+                isShooting = true;
+                ParticleSystem.CollisionModule collision = ps.collision;
+                collision.enabled = true;
+                collision.collidesWith = LayerMask.GetMask("Enemy", "Map");
             }
             else
             {
-                isHolding = false;
+                StopShooting();
             }
         }
-        
     }
+
+
 
     public override void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy"))
-            return;
+        if (!other.CompareTag(enemyTag)) return;
+
         HealthComponent health = other.GetComponent<HealthComponent>();
         health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(minDamage, maxDamage)));
         Debug.Log("Particle collided with " + other.tag);
@@ -191,13 +203,6 @@ public class RicochetControl : TurretControlBase
 
         ps.SetParticles(particles, numParticlesAlive);
     }
-    IEnumerator EnableCollisionAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        var collision = ps.collision;
-        collision.collidesWith = LayerMask.GetMask("Player", "Enemy" , "Map");
-    }
 
 
 
@@ -205,4 +210,8 @@ public class RicochetControl : TurretControlBase
     public override float GetRotateSpeed() => rotationSpeed;
     public override float MinDamage() => minDamage;
     public override float MaxDamage() => maxDamage;
+    public override float EnergyConsumption() => energy_per_shot;
+    public override float EnergyCapacity() => energy_capacity;
+    public override float ReloadTime() => energy_recharge;
+    public override float TimeBetweenShots() => timeBetweenShots;
 }

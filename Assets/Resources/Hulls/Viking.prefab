@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: -5537051878320422838, guid: eb068ba5724b5c943b3e46ffd1400031, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 4f8fe34e4e24bdd40b698d7a9da9a726, type: 2}
+      objectReference: {fileID: 2100000, guid: db123e24e45513444a18e2c24890f6e1, type: 2}
     - target: {fileID: 919132149155446097, guid: eb068ba5724b5c943b3e46ffd1400031, type: 3}
       propertyPath: m_Name
       value: Viking

@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: -5537051878320422838, guid: c40474f49ed78da4c8e181aacea5888a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 2d73b76ee7b166449a1c374ba8d1cf6d, type: 2}
+      objectReference: {fileID: 2100000, guid: e4ea00525713d204ab2ce16e22ae28c2, type: 2}
     - target: {fileID: 919132149155446097, guid: c40474f49ed78da4c8e181aacea5888a, type: 3}
       propertyPath: m_Name
       value: Dictator

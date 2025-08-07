@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UIElements;
+using static UnityEngine.ParticleSystem;
 
 
 public class TwinsControl : TurretControlBase
@@ -35,71 +37,96 @@ public class TwinsControl : TurretControlBase
     [SerializeField] Transform RightC;
     [SerializeField] Transform LeftC;
 
+
+    private float currentEnergy;
+    private float startReloadTime;
+    private float timeBetweenReloads = 0f;
+    private bool reloadTimeIsSet = false;
+    private bool isShooting = false;
+    private bool isInitialized = false;
+    private float energy_capacity;
+    private float energy_per_shot;
+
     [Header("References")]
-    private RectTransform crosshair;
+
     private ParticleSystem ps;
     private TwinsStatsLoader twins;
     private bool isHolding = false;
     #endregion
+    public string enemyTag;
+    private ParticleSystem.Particle[] particles;
+    private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
+    private ParticleSystem.MainModule mainModule;
+    CanvasUI cu;
+
+
 
     void Start()
     {
         twins = GetComponent<TwinsStatsLoader>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
         ps = GetComponentInChildren<ParticleSystem>();
+        particles = new ParticleSystem.Particle[ps.main.maxParticles];
         Invoke("StatsSetter", 0.2f);
+
+
     }
 
     void Update()
     {
-        if (transform.parent.parent.parent.tag == "Player")
+        if (!isInitialized) return;
+
+        if (!transform.parent.parent.parent.CompareTag("Player"))
+            return;
+
+        // Passive recharging
+        if (!isShooting && Time.time - startReloadTime >= timeBetweenReloads)
         {
-            MoveCrosshair();
-            RotateTowardMouse();
+            currentEnergy += (energy_capacity / reload_time) * Time.deltaTime;
+            currentEnergy = Mathf.Clamp(currentEnergy, 0f, energy_capacity);
         }
-        if (isHolding && Time.time - timepassed >= timeBetweenShots)
+
+        // Handle continuous shooting
+        if (isHolding && currentEnergy >= energy_per_shot && Time.time - timepassed >= timeBetweenShots)
         {
-            if (right)
+            timepassed = Time.time;
+            ps.transform.position = right ? RightC.transform.position : LeftC.transform.position;
+            ps.Emit(1);
+            right = !right;
+            currentEnergy -= energy_per_shot;
+
+            isShooting = true;
+
+            if (currentEnergy < energy_per_shot)
             {
-                timepassed = Time.time;
-                right = false;
-                ps.transform.position = RightC.transform.position;
-                ps.Emit(1);
+                StopShooting();
             }
-            else
-            {
-                timepassed = Time.time;
-                right = true;
-                ps.transform.position = LeftC.transform.position;
-                ps.Emit(1);
-            }
+        }
+        else if (!isHolding || currentEnergy < energy_per_shot)
+        {
+            isShooting = false;
+            startReloadTime = Time.time;
+
+            var em = ps.emission;
+            em.enabled = false;
+        }
+
+        // Update energy UI if needed
+        cu = GetComponentInChildren<CanvasUI>();
+        if (cu != null)
+        {
+            cu.CRInitialize(currentEnergy);
         }
     }
 
-    void MoveCrosshair()
+
+    private void StopShooting()
     {
-        crosshair.position = Input.mousePosition;
+        isShooting = false;
+        startReloadTime = Time.time;
+        var em = ps.emission;
+        em.enabled = false;
     }
 
-    void RotateTowardMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
-        {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = targetPoint - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotation_speed * Time.deltaTime);
-
-            }
-        }
-    }
 
     private void StatsSetter()
     {
@@ -120,40 +147,71 @@ public class TwinsControl : TurretControlBase
         projectile_radius = turretStats.projectile_radius;
         auto_aim_up = turretFixed.auto_aim_up;
         auto_aim_down = turretFixed.auto_aim_down;
-
+        energy_per_shot = 1000f;
+        energy_capacity = 1000;
+        currentEnergy = 1000f;
 
 
         var pjspeed = ps.main.startSpeed;
         pjspeed = projectile_speed;
         rotation_speed = rotation_speed / 10f;
+
+        Transform root = transform.parent.parent.parent;
+        enemyTag = root.CompareTag("Enemy") ? ("Player") : ("Enemy");
+        isInitialized = true;
     }
+
+
     public void OnShoot(InputValue value)
     {
-        if (transform.parent.parent.parent.tag == "Player")
+        if (!(transform.parent.parent.parent.tag == "Player")) return;
+        isHolding = value.isPressed;
+
+        if (isHolding && currentEnergy >= energy_per_shot)
         {
-            if (value.isPressed)
-            {
-                isHolding = true;
-            }
-            else
-            {
-                isHolding = false;
-            }
+            var em = ps.emission;
+            em.enabled = true;
+
+            var collision = ps.collision;
+            collision.enabled = true;
+            collision.collidesWith = LayerMask.GetMask("Enemy", "Map");
         }
-
-
-
     }
+
+
+
+
+
     public override void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+        int aliveCount = ps.GetParticles(particles);
+        if (other.CompareTag("Map"))
+        {
+           
+            if (aliveCount > 0)
+            {
+                particles[0].remainingLifetime = -1f;
+                ps.SetParticles(particles, aliveCount);
+            }
+            return;
+        }
+        if (!other.CompareTag(enemyTag)) return;
+
 
         HealthComponent health = other.GetComponent<HealthComponent>();
         health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(min_damage, max_damage)));
-
+        if (aliveCount > 0)
+        {
+            particles[0].remainingLifetime = -1f;
+            ps.SetParticles(particles, aliveCount);
+        }
         Debug.Log("Particle collided with " + other.tag);
     }
     public override float GetRotateSpeed() => rotation_speed;
     public override float MinDamage() => min_damage;
     public override float MaxDamage() => max_damage;
+    public override float EnergyConsumption() => 1000f;
+    public override float EnergyCapacity() => 1000f;
+    public override float ReloadTime() => reload_time;
+    public override float TimeBetweenShots() => 0f;
 }

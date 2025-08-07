@@ -4846,7 +4846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aaea137e39f91041a011d3438ab187b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretControl: {fileID: 7931476713772186571}
 --- !u!1001 &2412847029209038196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4895,6 +4894,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8202957551915430242, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a4222b1b01d8e4a489936b9f1842cb8d, type: 2}
+    - target: {fileID: -1433416284855106355, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a4222b1b01d8e4a489936b9f1842cb8d, type: 2}
     - target: {fileID: 919132149155446097, guid: a9227332cb0e07f40857756bec8abe28, type: 3}
       propertyPath: m_Name
       value: Ricochet

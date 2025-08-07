@@ -27,57 +27,62 @@ public class FreezeControl : TurretControlBase
     public float cone_angle;
 
     [Header("Visuals")]
-    
+    public float currentEnergy;
+    private float startReloadTime;
+    private float timeBetweedReloads = 0.5f;
+    private bool isShooting = false;
+    private bool isStartTimeSet = false;
 
     [Header("References")]
-    private RectTransform crosshair;
     private ParticleSystem ps;
     private FreezeStatsLoader freeze;
-
+    CanvasUI cu;
     #endregion
+    public string enemyTag;
+
+
+
+
 
     void Start()
     {
         freeze = GetComponent<FreezeStatsLoader>();
-        crosshair = GameObject.Find("Crosshair").GetComponent<RectTransform>();
         ps = GetComponentInChildren<ParticleSystem>();
         Invoke("StatsSetter", 0.2f);
+     
     }
-
-    void Update()
+    private void Update()
     {
-        if (transform.parent.parent.parent.tag == "Player")
+        if (!transform.parent.parent.parent.CompareTag("Player"))
+            return;
+
+        if (!isShooting && Time.time - startReloadTime >= timeBetweedReloads)
         {
-            MoveCrosshair();
-            RotateTowardMouse();
+            currentEnergy += (energy_capacity / reload_time) * Time.deltaTime;
+            currentEnergy = Mathf.Clamp(currentEnergy, 0f, energy_capacity);
         }
-    }
 
-    void MoveCrosshair()
-    {
-        crosshair.position = Input.mousePosition;
-    }
-
-    void RotateTowardMouse()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float distance))
+        if (isShooting)
         {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = targetPoint - transform.position;
-            direction.y = 0f;
-
-            if (direction.sqrMagnitude > 0.001f)
+            currentEnergy -= energy_consumption * Time.deltaTime;
+            if (currentEnergy < energy_consumption * Time.deltaTime)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation,rotationSpeed * Time.deltaTime);
-
+                StopShooting();
             }
         }
+        cu = GetComponentInChildren<CanvasUI>();
+        if (cu != null)
+        {
+            cu.CRInitialize(currentEnergy);
+        }
     }
-  
+    private void StopShooting()
+    {
+        isShooting = false;
+        startReloadTime = Time.time;
+        var em = ps.emission;
+        em.enabled = false;
+    }
     private void StatsSetter()
     { 
         turretMod = transform.parent.parent.parent.name.Split(' ')[4];
@@ -90,41 +95,54 @@ public class FreezeControl : TurretControlBase
         reload_time = turretStats.reload_time;
         min_damage_range = turretStats.min_damage_range;
         max_damage_range = turretStats.max_damage_range;
-        energy_capacity = turretFixed.energy_capacity;
+        energy_capacity = 1000;
         energy_consumption = turretFixed.energy_consumption;
         weak_damage_percent = turretFixed.weak_damage_percent;
         cone_angle = turretFixed.cone_angle;
+        currentEnergy = 1000f;
 
         var shape = ps.shape;
         shape.angle = cone_angle;
         rotationSpeed = rotationSpeed / 10f;
+
+        Transform root = transform.parent.parent.parent;
+        enemyTag = root.CompareTag("Enemy") ? ("Player") : ("Enemy");
     }
+
     public void OnShoot(InputValue value)
     {
         if (transform.parent.parent.parent.tag == "Player")
         {
-            var emmit = ps.emission;
-            if (value.isPressed)
+            if (value.isPressed && currentEnergy > 0)
             {
-                emmit.enabled = true;
+                var collision = ps.collision;
+                collision.collidesWith = LayerMask.GetMask("Enemy", "Map");
+                isShooting = true;
+                var em = ps.emission;
+                em.enabled = true;
             }
             else
             {
-                emmit.enabled = false;
+                StopShooting();
             }
         }
     }
     public override void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy")) return;
+        if (!other.CompareTag(enemyTag)) return;
+
 
         HealthComponent health = other.GetComponent<HealthComponent>();
-        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage, damage)));
+        health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(damage*Time.deltaTime, damage * Time.deltaTime)));
 
         Debug.Log("Particle collided with " + other.tag);
     }
 
     public override float GetRotateSpeed() => rotationSpeed;
-    public override float MinDamage() => damage;
-    public override float MaxDamage() => damage;
+    public override float MinDamage() => damage * Time.deltaTime;
+    public override float MaxDamage() => damage * Time.deltaTime;
+    public override float EnergyConsumption() => energy_consumption;
+    public override float EnergyCapacity() => 1000f;
+    public override float ReloadTime() => reload_time;
+    public override float TimeBetweenShots() => 0f;
 }

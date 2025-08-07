@@ -19,15 +19,24 @@ public class EnemyAI : MonoBehaviour
     public float hullWeight;
     public float hullRotationSpeed;
     public float tankHealsPoints;
+
     public float currentHealth;
     public float turretRotationSpeed;
+    public float turretEnergyCapacity;
+    public float turretEnergyConsumption;
+    public float turretReload;
+    public float currentEnergy;
+    public float whatTime;
 
     private int hullMod;
     private int turretMod;
     private string hullName;
     private string turretName;
     Transform muzzle;
+    Transform muzzle2;
     Transform turret;
+    Transform particleSystemTransform;
+
 
     float stoppingFactor = 1f;
     float turningstopFactor = 1f;
@@ -36,9 +45,9 @@ public class EnemyAI : MonoBehaviour
 
     [Header("AI Controls")]
 
-    [SerializeField] float sightRange = 50f;
-    [SerializeField] float attackRange;
-    [SerializeField] float closeRange = 20f;
+    float sightRange = 80f;
+    float attackRange= 50f;
+    float closeRange = 30f;
 
     #endregion
 
@@ -68,6 +77,15 @@ public class EnemyAI : MonoBehaviour
     private bool isInSightRange;
     private bool isTooClose;
     private bool didSpot = false;
+    private bool isShooting = false;
+    private float timeBetweenShots;
+    private float timeStartShoot = 0f;
+
+    private float timeBetweenReload = 0.5f;
+    private float startReloadTime = 0f;
+    private bool timeBeenSet = false;
+
+    private bool isRightMuzzle = true;
 
     private bool finishedMoving;
     private bool walkToPos;
@@ -76,6 +94,8 @@ public class EnemyAI : MonoBehaviour
     private bool canRotate;
 
     private bool isInitialized = false;
+
+    public string enemyTag;
 
     #endregion
 
@@ -119,18 +139,15 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        ReferencesSetter();
-        ParticleSystem particleSystem = GameObject.Find("Particle System").GetComponent<ParticleSystem>();
-        var collision = particleSystem.collision;
-        collision.enabled = true;
-
-        collision.collidesWith = LayerMask.GetMask("Player", "Enemy", "Map");
-        collision.collidesWith = LayerMask.GetMask();
+        
+        Invoke("ReferencesSetter",0.5f);
+  
 
     }
 
     private void LateUpdate()
     {
+        if (!isInitialized) return;
         NavMeshAgent.nextPosition = transform.position;
     }
 
@@ -140,6 +157,14 @@ public class EnemyAI : MonoBehaviour
         if(healthComponent.currentHealth < healthComponent.maxHealth) { didSpot = true; }
         SerchingForPlayer();
 
+        if (!isShooting)
+        {
+            if (Time.time - startReloadTime >= timeBetweenReload)
+            {
+                currentEnergy += (turretEnergyCapacity / turretReload) * Time.deltaTime;
+                currentEnergy = Mathf.Clamp(currentEnergy, 0f, turretEnergyCapacity);
+            }
+        }
         if (isInSightRange && isInAttackRange) {
             MoveCloser();
 
@@ -150,15 +175,25 @@ public class EnemyAI : MonoBehaviour
         {
             didSpot = true;
             MoveCloser();
-           // Debug.Log("Moving Closer");
+            isShooting = false;
+            if (timeBeenSet == false)
+            {
+                startReloadTime = Time.time;
+                timeBeenSet = true;
+            } // Debug.Log("Moving Closer");
         }
 
         else
         {
             Patrol();
-           // Debug.Log("Patrolling");
+            isShooting = false;
+            if (timeBeenSet == false)
+            {
+                startReloadTime = Time.time;
+                timeBeenSet = true;
+            }            // Debug.Log("Patrolling");
         }
-
+        
     }
 
     #endregion
@@ -299,21 +334,36 @@ public class EnemyAI : MonoBehaviour
 
     private void Attack()
     {
+        if (currentEnergy >= turretEnergyConsumption * whatTime)
+        {
+            if (Time.time - timeStartShoot >= timeBetweenShots)
+            {
+                if (turretName == "Twins") { particleSystemTransform.transform.position = isRightMuzzle ? muzzle.position : muzzle2.position; }
+                timeBeenSet = false;
+                ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
+                var collision = particleSystem.collision;
+                collision.collidesWith = LayerMask.GetMask("Player", "Map");
 
-        ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
-        var collision = particleSystem.collision;
-        collision.collidesWith = LayerMask.GetMask();
+                particleSystem.Emit(1);
+                currentEnergy -= turretEnergyConsumption * whatTime;
+                isShooting = true;
+                timeStartShoot = Time.time;
+                isRightMuzzle = !isRightMuzzle;
+            }
+        }
+        else
+        {
 
-        StartCoroutine(EnableCollisionAfterDelay(0.025f));
-        particleSystem.Emit(1);
+            isShooting = false;
+            if (timeBeenSet == false)
+            {
+                startReloadTime = Time.time;
+                timeBeenSet = true;
+            }
+        }
+
     }
-    IEnumerator EnableCollisionAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
-        var collision = particleSystem.collision;
-        collision.collidesWith = LayerMask.GetMask("Player", "Enemy", "Map");
-    }
+
 
     #endregion
 
@@ -447,6 +497,15 @@ public class EnemyAI : MonoBehaviour
         NavMeshAgent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         healthComponent = GetComponent<HealthComponent>();
+        ParticleSystem particleSystem = GameObject.Find("Particle System").GetComponent<ParticleSystem>();
+        var collision = particleSystem.collision;
+        collision.enabled = true;
+
+        collision.collidesWith = LayerMask.GetMask("Player", "Enemy", "Map");
+        collision.collidesWith = LayerMask.GetMask();
+
+        Transform root = transform;
+        enemyTag = root.CompareTag("Enemy") ? ("Player") : ("Enemy");
     }
 
     private void HullStatsSetter()
@@ -467,14 +526,27 @@ public class EnemyAI : MonoBehaviour
     {
         muzzle = transform.Find($"{hullName}(Clone)/mount/{turretName}(Clone)/muzzle");
         turret = transform.Find($"{hullName}(Clone)/mount/{turretName}(Clone)/");
+        particleSystemTransform = transform.Find($"{hullName}(Clone)/mount/{turretName}(Clone)/Particle System");
 
+        if (turretName == "Firebird" || turretName == "Isida" || turretName == "Freeze") whatTime = 1 * Time.deltaTime;
+        else whatTime = 1;
+        if (turretName == "Twins")
+        {
+            muzzle2 = transform.Find($"{hullName}(Clone)/mount/{turretName}(Clone)/muzzle2");
+            timeBetweenReload = 0f;
+        }
         turretControlBase = turret.GetComponent<TurretControlBase>();
         turretControl = turretControlBase.GetTurretControl(turretName, "M" + turretMod);    
         turretRotationSpeed = turretControl.GetRotateSpeed()*5;
+        turretEnergyCapacity = turretControl.EnergyCapacity();
+        currentEnergy = turretEnergyCapacity;
+        turretEnergyConsumption = turretControl.EnergyConsumption();
+        turretReload = turretControl.ReloadTime();
         minDamage = turretControl.MinDamage();
         maxDamage = turretControl.MaxDamage();
+        timeBetweenShots = turretControl.TimeBetweenShots();
         
-
+        
         isInitialized = true;
     }
 
@@ -484,8 +556,9 @@ public class EnemyAI : MonoBehaviour
 
     public void HandleParticleCollision(GameObject other)
     {
-        if (!other.CompareTag("Player") && !other.CompareTag("Enemy"))
-            return;
+
+        if (!other.CompareTag(enemyTag)) return;
+
         ParticleSystem particleSystem = GetComponentInChildren<ParticleSystem>();
         HealthComponent health = other.GetComponent<HealthComponent>();
         health.TakeDamage(Mathf.RoundToInt(UnityEngine.Random.Range(minDamage, maxDamage)));
@@ -518,6 +591,9 @@ public class EnemyAI : MonoBehaviour
         }
 
         particleSystem.SetParticles(particles, numParticlesAlive);
+
+
+
     }
 
     #endregion

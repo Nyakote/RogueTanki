@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: -5537051878320422838, guid: 0d3c772cd56e1fb438d6f0a7422fa13f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: beec1de2c5757784f9c3be08a15c147c, type: 2}
+      objectReference: {fileID: 2100000, guid: e25d970a243902a4791cd544c4c9c6e5, type: 2}
     - target: {fileID: 919132149155446097, guid: 0d3c772cd56e1fb438d6f0a7422fa13f, type: 3}
       propertyPath: m_Name
       value: Hornet
