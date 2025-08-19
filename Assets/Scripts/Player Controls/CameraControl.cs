@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class CameraControl : MonoBehaviour
 {
     #region Variables
 
-    [Header("Hull/Turret")]
-    GameObject hull;
+    [Header("Turret")]
     GameObject turret;
 
     [Header("Camera settings")]
@@ -21,7 +21,7 @@ public class CameraControl : MonoBehaviour
  
     private float angle;
     private Vector3 offset;
-
+    public DeathFade def;
 
     [Header("Input")]
     float riseInput;
@@ -31,6 +31,7 @@ public class CameraControl : MonoBehaviour
 
     void Update()
     {
+        if(turret == null) { def.StartFade(); SceneManager.LoadScene("MainMenu"); return; }
         float currentInput = 0f;
         float currentRangeInput = 0f;
 
@@ -45,8 +46,8 @@ public class CameraControl : MonoBehaviour
         Radius = Mathf.Clamp(Radius, minRange, maxRange);
 
         offset = new Vector3(Mathf.Sin(angle) * Radius, -rise, Mathf.Cos(angle) * Radius);
-        transform.position = hull.transform.position + offset*-1;
-        transform.LookAt(hull.transform);
+        transform.position = turret.transform.position + offset*-1;
+        transform.LookAt(turret.transform);
     }
 
     public void OnCameraControl(InputValue value)
@@ -59,8 +60,7 @@ public class CameraControl : MonoBehaviour
     }
 
     public void Initialize(GameObject hullGO, GameObject turretGO)
-    {
-        hull = hullGO;
+    { 
         turret = turretGO;
     }
 }

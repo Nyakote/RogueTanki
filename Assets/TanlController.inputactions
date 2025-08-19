@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Health Drug",
+                    "type": "Button",
+                    "id": "68b1ac1c-6041-4bca-8872-f88abd6e2c81",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -256,6 +265,17 @@
                     "action": "Camera Range",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "1d233a78-763c-48da-ad96-81266af2f48f",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Health Drug",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

@@ -102,7 +102,7 @@ public class TurretControl : MonoBehaviour
 
     private void TurretTurning()
     {
-        currentTurretYaw += inputTurret * rotationSpeed * Time.deltaTime;
+        currentTurretYaw += inputTurret * rotationSpeed/1.05f * Time.deltaTime;
         turretGO.transform.localRotation = Quaternion.Euler(0f, currentTurretYaw, 0f);
     }
 

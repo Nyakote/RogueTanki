@@ -85,7 +85,7 @@ public class HullMovement : MonoBehaviour
     {
         if (!(gr.FrontCheck || gr.RearCheck || gr.MidCheck)) return;
         if (isTouchingObstacle) return;
-        if (accelFactor > 1) accelFactor -= 0.05f;
+        if (accelFactor > 1.2) accelFactor -= 0.05f;
         Vector3 forwardMove = transform.forward * moveInputZ * (speed / accelFactor) * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + forwardMove);
         stoppingFactor = 1f;
@@ -99,7 +99,7 @@ public class HullMovement : MonoBehaviour
         else limit = 1.25f;
             if (stoppingFactor != speed)
             {
-                stoppingFactor += 0.01f;
+                stoppingFactor += 0.05f;
                 if (stoppingFactor > limit) stoppingFactor = speed;
                 Vector3 forwardMove = lastMovementInput * transform.forward * speed / stoppingFactor * Time.fixedDeltaTime;
                 rb.MovePosition(rb.position + forwardMove);

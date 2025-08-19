@@ -75,4 +75,6 @@ public class CanvasUI : MonoBehaviour
 
         isInitialized = true;
     }
+
+  
 }

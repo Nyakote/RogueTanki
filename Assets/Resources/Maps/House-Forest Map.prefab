@@ -286,6 +286,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7167470381312906087}
+  - component: {fileID: 4963614808800093268}
   m_Layer: 0
   m_Name: House-Forest Map
   m_TagString: Untagged
@@ -309,6 +310,21 @@ Transform:
   - {fileID: 5133580636088098597}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4963614808800093268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6719722097326453445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6c6db0068d3ff479d0a4210a01d2dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doors:
+  - {fileID: 3341560545497839528}
+  - {fileID: 4686377255490253366}
 --- !u!1 &6833193117738429355
 GameObject:
   m_ObjectHideFlags: 0
